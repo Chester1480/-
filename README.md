@@ -5,7 +5,7 @@
  - 吳偉琳/男/1980 
  - 本科/自動化工程系 
  - 工作年限：5年開發網頁專案
- - Github：http://github.com/chester1480 ( ``` 有原創repo的Github帳號會極大的提升你的個人品牌 ```  )
+ - Github：http://github.com/chester1480 
  - 期望職位：架構師
 ---
 
