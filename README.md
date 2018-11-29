@@ -2,7 +2,7 @@
 ![](https://avatars1.githubusercontent.com/u/5442691)
 
 # 個人資料
- - 吳偉琳/男/1980 
+ - 吳偉琳/男/1987
  - 本科/自動化工程系 
  - 工作年限：5年開發網頁專案
  - Github：http://github.com/chester1480 
