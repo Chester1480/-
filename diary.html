@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, user-scalable=no" />
+    <title></title>
+    <link rel="stylesheet" href="https://scampus.yunlin.gov.tw/yunlin_line/css/styles.css?v=33456" />
+  </head>
+  <body>
+    <div class="outer" id="Diary">
+      <div class="inner diary active">
+        <p class="title text textL">盈碩國民小學</p>
+        <div class="kidBox">
+          <a href="javascript:;" class="backBtn"><img src="https://scampus.yunlin.gov.tw/yunlin_line/img/back.png" alt=""></a>
+          <a href="javascript:;" class="btn2 active">3年2班 丁圓圓</a>
+        </div>
+        <div class="calendarBox">
+          <div class="calendar">
+            <div class="title">
+              <p class="dateTitle">
+                <span
+                  class="text textGreen textXL"
+                  v-text="calender.year"
+                ></span>
+                <span class="text textXS textGreen">年</span>
+                <span
+                  class="text textGreen textXL"
+                  v-text="calender.month+1"
+                ></span>
+                <span class="text textXS textGreen">月</span>
+              </p>
+
+              <a
+                href="javascript:;"
+                class="calenderBtn prev"
+                onclick="page.prevMonth();"
+              >
+                <img src="../img/arrowL.png" alt="" />
+              </a>
+              <a
+                href="javascript:;"
+                class="calenderBtn next"
+                onclick="page.nextMonth();"
+              >
+                <img src="../img/arrowR.png" alt="" />
+              </a>
+            </div>
+            <div class="body">
+              <div class="weekBox body-list">
+                <ul>
+                  <li
+                    v-for="(week, idx) in calender.weekStr"
+                    v-text="week"
+                  ></li>
+                </ul>
+              </div>
+              <div class="dateBox body-list">
+                <ul id="days">
+                  <li v-for="n in 42" v-bind:class="setDateClass(n-1)">
+                    <span
+                      class="text textDark"
+                      v-bind:class="setTypeClass(n-1)"
+                    >
+                      <span class="num" v-text="setDate(n-1)"></span>
+                      <span class="otherBox">
+                        <span class="otherCircle consume"></span>
+                        <span class="otherCircle recycle"></span>
+                      </span>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="calenderBottom">
+          <div class="infoBox">
+            <div class="hr"></div>
+            <div class="info">
+              <span class="icon icon1"
+                ><span class="circle"></span>
+                <span class="text textS textDark">今天</span></span
+              >
+              <span class="icon icon2"
+                ><span class="circle"></span>
+                <span class="text textS textDark">到校</span></span
+              >
+              <span class="icon icon3"
+                ><span class="circle"></span>
+                <span class="text textS textDark">離校</span></span
+              >
+              <span class="icon icon4"
+                ><span class="circle"></span>
+                <span class="text textS textDark">消費</span></span
+              >
+              <span class="icon icon5"
+                ><span class="circle"></span>
+                <span class="text textS textDark">回收</span></span
+              >
+            </div>
+          </div>
+          <div class="detailBox">
+            <div class="dateBox">
+              <div class="top">
+                <p class="text textXS textDark">8月</p>
+                <p class="text textXL textDark">1</p>
+              </div>
+              <div class="bottom">
+                <p class="text textXS">週五</p>
+              </div>
+            </div>
+            <div class="detail arrive">
+              <p class="text textDark">07:20 到校</p>
+            </div>
+            <div class="detail recycle">
+              <p class="text textDark">08:10 回收</p>
+            </div>
+            <div class="detail consume">
+              <p class="text textDark">10:10 消費</p>
+            </div>
+            <div class="detail leave">
+              <p class="text textDark">17:10 離校</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script src="https://scampus.yunlin.gov.tw/yunlin_line/js/jquery-1.11.3.min.js"></script>
+  <script src="https://scampus.yunlin.gov.tw/yunlin_line/js/vue.min.js"></script>
+  <script src="https://scampus.yunlin.gov.tw/yunlin_line/js/script.js"></script>
+  <script src="https://scampus.yunlin.gov.tw/yunlin_line/js/sdk.js"></script>
+  <script>
+    var page;
+    $(document).ready(function() {
+      page = new Diary();
+      page.init();
+    });
+    var alldata;
+    function init(){
+      window.onload = function (e) {
+          liff.init(function (data) {
+              $.ajax({
+                url: 'https://scampus.yunlin.gov.tw/FRONTAPI/Api/IsRegister',
+                //url: 'https://localhost:44330/Api/IsRegister',
+                contentType: 'application/json',
+                type: 'Post',
+                data: JSON.stringify({ 
+                LineId: data.context.userId
+                }),
+                error: function (xhr) {
+                    alert('Ajax request 發生錯誤');
+                },
+                success: function (response) {
+                    if(response.code != 1){
+                      document.location.href  = "https://scampus.yunlin.gov.tw/yunlin_line/confirm.html";
+                    }else{
+                      GetMonthData();
+                    }
+                }
+            });
+          });
+      };
+    }
+    init();
+    function initializeApp(data) {
+      lineid = data.context.userId;
+      return data.context.userId;
+    }
+    function GetMonthData(){
+      $.ajax({
+            //url: 'https://scampus.yunlin.gov.tw/FRONTAPI/Api/MonthData',
+            url: 'https://localhost:44330/Api/MonthData',
+            contentType: 'application/json',
+            type: 'Post',
+            data: JSON.stringify({ 
+            //LineId: data.context.userId
+            LineId:""
+            }),
+            error: function (xhr) {
+                alert('Ajax request 發生錯誤');
+            },
+            success: function (response) {
+                if(response.ReturnCode != 404){
+                  alldata = response;
+                  console.log(alldata.data);
+                }
+            }
+        });
+    }
+    GetMonthData();
+  </script>
+</html>
